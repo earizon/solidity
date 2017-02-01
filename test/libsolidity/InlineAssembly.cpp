@@ -159,6 +159,11 @@ BOOST_AUTO_TEST_CASE(blocks)
 	BOOST_CHECK(successParse("{ let x := 7 { let y := 3 } { let z := 2 } }"));
 }
 
+BOOST_AUTO_TEST_CASE(labels_with_stack_info)
+{
+	BOOST_CHECK(successParse("{ x[-1]: y[a]: z[d, e]: h[100]: }"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(Printing)

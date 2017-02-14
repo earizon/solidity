@@ -188,6 +188,11 @@ BOOST_AUTO_TEST_CASE(print_label)
 	parsePrintCompare("{\n    loop:\n    jump(loop)\n}");
 }
 
+BOOST_AUTO_TEST_CASE(print_label_with_stack)
+{
+	parsePrintCompare("{\n    loop[x, y]:\n    other[-2]:\n    third[10]:\n}");
+}
+
 BOOST_AUTO_TEST_CASE(print_assignments)
 {
 	parsePrintCompare("{\n    let x := mul(2, 3)\n    7\n    =: x\n    x := add(1, 2)\n}");

@@ -582,9 +582,11 @@ Safe Remote Purchase
             _;
         }
 
+        event abortFailed();
         event aborted();
         event purchaseConfirmed();
         event itemReceived();
+        event confirmReceivedFailed();
 
         /// Abort the purchase and reclaim the ether.
         /// Can only be called by the seller before
@@ -593,10 +595,12 @@ Safe Remote Purchase
             onlySeller
             inState(State.Created)
         {
-            aborted();
             state = State.Inactive;
-            if (!seller.send(this.balance))
+            if (!seller.send(this.balance)) {
+                abortFailed();
                 throw;
+            }
+            aborted();
         }
 
         /// Confirm the purchase as buyer.
@@ -608,9 +612,9 @@ Safe Remote Purchase
             require(msg.value == 2 * value)
             payable
         {
-            purchaseConfirmed();
             buyer = msg.sender;
             state = State.Locked;
+            purchaseConfirmed();
         }
 
         /// Confirm that you (the buyer) received the item.
@@ -619,15 +623,17 @@ Safe Remote Purchase
             onlyBuyer
             inState(State.Locked)
         {
-            itemReceived();
             // It is important to change the state first because
             // otherwise, the contracts called using `send` below
             // can call in again here.
             state = State.Inactive;
             // This actually allows both the buyer and the seller to
             // block the refund.
-            if (!buyer.send(value) || !seller.send(this.balance))
+            if (!buyer.send(value) || !seller.send(this.balance)) {
+                confirmReceivedFailed();
                 throw;
+            }
+            itemReceived();
         }
     }
 

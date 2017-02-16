@@ -74,8 +74,8 @@ struct Scope
 			m_labelVisitor(std::move(_labelVisitor))
 		{}
 
-		void operator()(Variable const& _var) { m_varVisitor(_var); }
-		void operator()(Label const& _label) { m_labelVisitor(_label); }
+		void operator()(Variable const& _var) const { m_varVisitor(_var); }
+		void operator()(Label const& _label) const { m_labelVisitor(_label); }
 
 		std::function<void(Variable const&)> m_varVisitor;
 		std::function<void(Label const&)> m_labelVisitor;
@@ -90,8 +90,8 @@ struct Scope
 			m_labelVisitor(std::move(_labelVisitor))
 		{}
 
-		void operator()(Variable& _var) { m_varVisitor(_var); }
-		void operator()(Label& _label) { m_labelVisitor(_label); }
+		void operator()(Variable& _var) const { m_varVisitor(_var); }
+		void operator()(Label& _label) const { m_labelVisitor(_label); }
 
 		std::function<void(Variable&)> m_varVisitor;
 		std::function<void(Label&)> m_labelVisitor;
